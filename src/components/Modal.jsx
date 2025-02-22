@@ -30,18 +30,16 @@ function Modal({ isOpen, onClose }) {
         "67b036be001d9e542d53",
         ID.unique(),
         {
-          email: user.email,
+          userId: user.$id, // Store userId with the project
           projectTitle: projectTitle.trim(),
           userLink: userLink.trim(),
         }
       );
 
       toast.success("🚀 Project added successfully!");
-      
       setTimeout(() => {
-        window.location.reload(); // ✅ Auto refresh after success
+        window.location.reload(); // Refresh after success
       }, 100);
-
     } catch (error) {
       toast.error(`❌ Failed to save: ${error.message}`);
     } finally {
@@ -53,7 +51,7 @@ function Modal({ isOpen, onClose }) {
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-6 rounded-2xl shadow-2xl w-96 border border-blue-100">
         <h2 className="text-2xl font-bold text-cyan-600 mb-4 text-center">➕ Add Project</h2>
-        
+
         <input
           type="text"
           placeholder="Project Title"

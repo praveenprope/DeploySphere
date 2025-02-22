@@ -12,6 +12,7 @@ const account = new Account(client);
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,7 +46,20 @@ function Login() {
       navigate("/deploysphere"); // Redirect after login
     } catch (error) {
       console.error("Error logging in:", error);
-      alert(error.message);
+      setError(error.message);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      setError("Please enter your email to reset password.");
+      return;
+    }
+    try {
+      await account.createRecovery(email, "http://localhost:5173/reset-password");
+      alert("Password reset link sent to your email.");
+    } catch (error) {
+      setError(error.message);
     }
   };
 
@@ -53,6 +67,8 @@ function Login() {
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50">
       <h2 className="text-3xl font-semibold mb-4">Login</h2>
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-80">
+        {error && <p className="text-red-500 mb-2">{error}</p>}
+        
         <input
           type="email"
           placeholder="Email"
@@ -61,6 +77,7 @@ function Login() {
           className="mb-4 p-2 w-full border border-gray-300 rounded"
           required
         />
+
         <input
           type="password"
           placeholder="Password"
@@ -69,10 +86,15 @@ function Login() {
           className="mb-4 p-2 w-full border border-gray-300 rounded"
           required
         />
+
         <button type="submit" className="bg-blue-500 text-white w-full py-2 rounded">
           Login
         </button>
       </form>
+
+      <button onClick={handleForgotPassword} className="mt-4 text-blue-500">
+        Forgot Password?
+      </button>
 
       {/* Links for navigation */}
       <div className="mt-4 text-center">
