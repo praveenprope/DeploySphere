@@ -128,7 +128,7 @@ function Signup() {
         </p>
         <p className="text-gray-600 mt-2">
           <a href="/" className="text-blue-500 hover:underline">
-            Back to Homepage
+            Back to  Homepage
           </a>
         </p>
       </motion.div>
