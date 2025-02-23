@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Client, Account } from "appwrite";
+import { motion } from "framer-motion";
+import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
 
 // Initialize Appwrite Client
 const client = new Client()
@@ -16,13 +18,12 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if user is already logged in
     const checkSession = async () => {
       try {
-        const user = await account.get(); // Get user session
-        localStorage.setItem("userEmail", user.email); // Store email in localStorage
-        navigate("/deploysphere"); // Redirect if already logged in
-      } catch (error) {
+        const user = await account.get();
+        localStorage.setItem("userEmail", user.email);
+        navigate("/deploysphere");
+      } catch {
         console.log("No active session found");
       }
     };
@@ -34,16 +35,10 @@ function Login() {
 
     try {
       await account.createEmailPasswordSession(email, password);
-
-      // Fetch user details
       const user = await account.get();
-      console.log("User Info:", user);
-
-      // Store user email in localStorage
       localStorage.setItem("userEmail", user.email);
       localStorage.setItem("isAuthenticated", "true");
-
-      navigate("/deploysphere"); // Redirect after login
+      navigate("/deploysphere");
     } catch (error) {
       console.error("Error logging in:", error);
       setError(error.message);
@@ -64,40 +59,71 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50">
-      <h2 className="text-3xl font-semibold mb-4">Login</h2>
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-80">
-        {error && <p className="text-red-500 mb-2">{error}</p>}
-        
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="mb-4 p-2 w-full border border-gray-300 rounded"
-          required
-        />
+    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-blue-50 to-indigo-100">
+      {/* Animated Heading */}
+      <motion.h2 
+        initial={{ opacity: 0, y: -20 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        className="text-4xl font-bold text-gray-900 mb-6"
+      >
+        Welcome Back 👋
+      </motion.h2>
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="mb-4 p-2 w-full border border-gray-300 rounded"
-          required
-        />
+      <motion.form 
+        initial={{ opacity: 0, y: 20 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ delay: 0.2 }}
+        onSubmit={handleSubmit} 
+        className="bg-white p-8 rounded-2xl shadow-xl w-96"
+      >
+        {error && <p className="text-red-500 mb-3 text-center">{error}</p>}
 
-        <button type="submit" className="bg-blue-500 text-white w-full py-2 rounded">
-          Login
+        <div className="mb-4 flex items-center bg-gray-100 px-4 py-2 rounded-lg">
+          <FaEnvelope className="text-gray-500 mr-3" />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="bg-transparent outline-none w-full"
+            required
+          />
+        </div>
+
+        <div className="mb-4 flex items-center bg-gray-100 px-4 py-2 rounded-lg">
+          <FaLock className="text-gray-500 mr-3" />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="bg-transparent outline-none w-full"
+            required
+          />
+        </div>
+
+        <button 
+          type="submit" 
+          className="w-full bg-blue-600 text-white py-3 rounded-lg shadow-md hover:bg-blue-700 transition"
+        >
+          🔑 Login
         </button>
-      </form>
 
-      <button onClick={handleForgotPassword} className="mt-4 text-blue-500">
-        Forgot Password?
-      </button>
+        <button 
+          onClick={handleForgotPassword} 
+          className="mt-3 text-blue-500 text-sm text-center block hover:underline"
+        >
+          Forgot Password?
+        </button>
+      </motion.form>
 
       {/* Links for navigation */}
-      <div className="mt-4 text-center">
+      <motion.div 
+        initial={{ opacity: 0 }} 
+        animate={{ opacity: 1 }} 
+        transition={{ delay: 0.4 }}
+        className="mt-6 text-center"
+      >
         <p className="text-gray-600">
           Don't have an account?{" "}
           <Link to="/signup" className="text-blue-500 hover:underline">
@@ -109,7 +135,7 @@ function Login() {
             Back to Homepage
           </Link>
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 }
